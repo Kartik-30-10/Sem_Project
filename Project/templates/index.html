@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Check Patient Risk</title>
+</head>
+<body>
+    <h1>Check Existing Patient Risk</h1>
+    <form method="POST">
+        <label for="patient_id_check">Patient ID:</label>
+        <input type="text" id="patient_id_check" name="patient_id_check" required>
+        <button type="submit">Search</button>
+    </form>
+
+    {% if error %}
+        <p style="color:red;">{{ error }}</p>
+    {% endif %}
+
+    {% if patient %}
+        <h2>Patient ID: {{ patient.patient_id }}</h2>
+        <p>Risk Score: {{ patient.risk_score }}</p>
+        <p>Risk Percentage: {{ risk_percent }}%</p>
+        <p>Risk Level: <strong>{{ risk_level }}</strong></p>
+        <p>
+            Categories:<br>
+            Low (&lt;{{ thresholds[0] }}%)<br>
+            High ({{ thresholds[0] }}-{{ thresholds[1] }}%)<br>
+            Very High (&gt;{{ thresholds[1] }}%)
+        </p>
+        <p>
+            {% if risk_level == 'Very High' %}
+            <strong>ALERT: Immediate clinical review recommended!</strong>
+            {% endif %}
+        </p>
+    {% endif %}
+    <p><a href="{{ url_for('add_patient') }}">Add New Patient</a></p>
+</body>
+</html>

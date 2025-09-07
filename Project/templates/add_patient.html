@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add New Patient & Predict</title>
+</head>
+<body>
+    <h1>Add New Patient & Predict</h1>
+    {% if error %}
+        <p style="color:red;">{{ error }}</p>
+    {% elif success %}
+        <p style="color:green;">{{ success }}</p>
+        <p>Assigned Patient ID: <strong>{{ patient_id }}</strong></p>
+    {% endif %}
+    <form method="POST">
+
+        <label for="age">How old are you? (Your age helps us assess your health risk.)</label>
+        <input type="number" id="age" name="age" min="0" required><br>
+
+        <label for="max_daily_mme">
+            What is the maximum daily opioid dose (MME) you've received? (MME measures opioid amount per day.)
+        </label>
+        <input type="number" step="0.01" name="max_daily_mme" id="max_daily_mme" min="0" required><br>
+
+        <label for="opioid_use_duration_days">
+            For how many days have you continuously been prescribed opioids? (Longer duration increases risk.)
+        </label>
+        <input type="number" name="opioid_use_duration_days" id="opioid_use_duration_days" min="0" required><br>
+
+        <label for="early_refill_count">
+            How many times did you request an opioid refill earlier than scheduled? (Early refills may signal risk.)
+        </label>
+        <input type="number" name="early_refill_count" id="early_refill_count" min="0" required><br>
+
+        <label for="overlapping_opioids_flag">
+            Have you been prescribed more than one opioid at a time? (Overlapping prescriptions are a risk factor.)
+        </label>
+        <select name="overlapping_opioids_flag" id="overlapping_opioids_flag">
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+        </select><br>
+
+        <label for="doctor_shopping_flag">
+            Have you seen multiple doctors for opioid prescriptions? (Doctor shopping increases risk.)
+        </label>
+        <select name="doctor_shopping_flag" id="doctor_shopping_flag">
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+        </select><br>
+
+        <label for="concurrent_benzodiazepine_use">
+            Are you currently prescribed benzodiazepines along with opioids? (Mixing increases overdose risk.)
+        </label>
+        <select name="concurrent_benzodiazepine_use" id="concurrent_benzodiazepine_use">
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+        </select><br>
+
+        <label for="depression_diagnosis">
+            Have you been diagnosed with depression? (Mental health affects opioid risk.)
+        </label>
+        <select name="depression_diagnosis" id="depression_diagnosis">
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+        </select><br>
+
+        <label for="chronic_pain_diagnosis">
+            Do you have chronic pain? (Chronic pain often means long-term opioid use.)
+        </label>
+        <select name="chronic_pain_diagnosis" id="chronic_pain_diagnosis">
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+        </select><br>
+
+        <label for="number_of_prescribing_doctors">
+            How many different doctors prescribed you opioids? (Higher numbers mean higher risk.)
+        </label>
+        <input type="number" name="number_of_prescribing_doctors" id="number_of_prescribing_doctors" min="0" required><br>
+
+        <label for="er_visits_last_year">
+            How many times have you visited the ER in the past year? (Frequent ER visits may signal complications.)
+        </label>
+        <input type="number" name="er_visits_last_year" id="er_visits_last_year" min="0" required><br>
+
+        <label for="addiction_treatment_history">
+            Have you ever received treatment for addiction? (History of treatment increases risk.)
+        </label>
+        <select name="addiction_treatment_history" id="addiction_treatment_history">
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+        </select><br>
+
+        <label for="prior_substance_use_disorder_flag">
+            Have you had substance use disorder in the past? (Prior issues raise your risk.)
+        </label>
+        <select name="prior_substance_use_disorder_flag" id="prior_substance_use_disorder_flag">
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+        </select><br>
+
+        <label for="mme_escalation_flag">
+            Has your opioid dosage been increased over time? (Dosage escalation signals developing tolerance.)
+        </label>
+        <select name="mme_escalation_flag" id="mme_escalation_flag">
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+        </select><br>
+
+        <label for="medication_adherence_score">
+            How would you rate your ability to take medication as prescribed? (0=poor, 100=perfect adherence)
+        </label>
+        <input type="number" step="0.01" name="medication_adherence_score" id="medication_adherence_score" min="0" max="100" required><br>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <p><a href="{{ url_for('index') }}">Home</a></p>
+    <p>
+        Risk Categories:<br>
+        Low (&lt;{{ thresholds[0] }}%)<br>
+        High ({{ thresholds[0] }}-{{ thresholds[1] }}%)<br>
+        Very High (&gt;{{ thresholds[1] }}%)
+    </p>
+</body>
+</html>
